@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/luist18/gossip-glomers/pkg/id"
 	"github.com/luist18/gossip-glomers/pkg/protocol"
 )
 
@@ -15,12 +16,15 @@ type Node struct {
 	id  string
 	ids []string
 
+	idGenerator id.SnowflakeGenerator
+
 	handlers map[string]MessageHandler
 }
 
 func New() *Node {
 	return &Node{
-		handlers: make(map[string]MessageHandler),
+		handlers:    make(map[string]MessageHandler),
+		idGenerator: *id.NewSnowflakeGenerator(uint16(os.Getpid())),
 	}
 }
 
@@ -111,4 +115,8 @@ func (n *Node) init(msg protocol.Message) error {
 
 	fmt.Fprintf(os.Stderr, "node initialized with id %s\n", n.id)
 	return nil
+}
+
+func (n *Node) GenerateID() (int64, error) {
+	return n.idGenerator.Generate()
 }

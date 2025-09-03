@@ -34,6 +34,15 @@ case "$TEST_NAME" in
   echo)
     cmd=( "${MAELSTROM_DIR}/maelstrom" test -w echo --bin "${BINARY}" --node-count 1 --time-limit 10 )
     ;;
+  unique-ids)
+    cmd=( "${MAELSTROM_DIR}/maelstrom" test -w unique-ids \
+          --bin "${BINARY}" \
+          --time-limit 30 \
+          --rate 1000 \
+          --node-count 3 \
+          --availability total \
+          --nemesis partition )
+    ;;
   *)
     echo "unknown test: ${TEST_NAME}" >&2
     exit 2

@@ -16,5 +16,21 @@ func main() {
 		return node.Reply(msg, body)
 	})
 
+	node.Handle("generate", func(msg protocol.Message) error {
+		id, err := node.GenerateID()
+		if err != nil {
+			return err
+		}
+
+		body := protocol.Body{
+			Type: "generate_ok",
+			Properties: map[string]any{
+				"id": id,
+			},
+		}
+
+		return node.Reply(msg, body)
+	})
+
 	node.Start()
 }
