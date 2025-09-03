@@ -19,12 +19,15 @@ type Node struct {
 	idGenerator id.SnowflakeGenerator
 
 	handlers map[string]MessageHandler
+
+	broadcastQueue []int64
 }
 
 func New() *Node {
 	return &Node{
-		handlers:    make(map[string]MessageHandler),
-		idGenerator: *id.NewSnowflakeGenerator(uint16(os.Getpid())),
+		handlers:       make(map[string]MessageHandler),
+		idGenerator:    *id.NewSnowflakeGenerator(uint16(os.Getpid())),
+		broadcastQueue: make([]int64, 0),
 	}
 }
 
@@ -119,4 +122,12 @@ func (n *Node) init(msg protocol.Message) error {
 
 func (n *Node) GenerateID() (int64, error) {
 	return n.idGenerator.Generate()
+}
+
+func (n *Node) AddToBroadcastQueue(msg int64) {
+	n.broadcastQueue = append(n.broadcastQueue, msg)
+}
+
+func (n *Node) ReadBroadcastQueue() []int64 {
+	return n.broadcastQueue
 }

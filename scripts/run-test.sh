@@ -43,6 +43,13 @@ case "$TEST_NAME" in
           --availability total \
           --nemesis partition )
     ;;
+  broadcast)
+    cmd=( "${MAELSTROM_DIR}/maelstrom" test -w broadcast \
+          --bin "${BINARY}" \
+          --node-count 1 \
+          --time-limit 20 \
+          --rate 10 )
+    ;;
   *)
     echo "unknown test: ${TEST_NAME}" >&2
     exit 2
